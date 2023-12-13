@@ -1,0 +1,135 @@
+:root {
+  font-size: 24px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 200;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  padding: 40px;
+}
+
+.container {
+  /* border: 2px solid black; */
+  box-sizing: border-box;
+  width: 600px;
+  /* height: 800px; */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  padding: 50px;
+  border-radius: 48px;
+  box-shadow: 4px 4px 8px rgb(162, 162, 162);
+}
+
+form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#search-input {
+  border: none;
+  border-bottom: 3px solid rgba(0, 0, 0, 0.516);
+  width: 80%;
+  height: 1.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.1rem 0.5rem;
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: black;
+}
+
+#current-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#location {
+  font-size: 1.7rem;
+}
+
+#country {
+  font-size: 1.2rem;
+}
+
+#current-temp {
+  font-size: 4rem;
+  margin-top: 24px;
+}
+
+#current-container img {
+  width: 100px;
+}
+
+#hourly-container {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  gap: 30px;
+  padding: 24px 36px;
+  border-radius: 18px;
+  box-shadow: 4px 4px 8px gray;
+  overflow-x: scroll;
+}
+
+.hour-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#daily-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 18px 36px;
+  box-shadow: 4px 4px 8px gray;
+}
+
+.daily-card {
+  display: flex;
+  align-items: center;
+}
+
+.day-str {
+  flex-grow: 1;
+}
+
+.daily-card img {
+  padding-right: 40px;
+}
+
+.low-high-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.temp-bar-container {
+  width: 100px;
+  height: 10px;
+}
+
+.temp-bar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background-color: rgb(219, 219, 255);
+}
+
+/* Padding done on .temp-bar with JS to create bar fill effect*/
+.temp-bar-fill {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(204, 128, 128);
+}
