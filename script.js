@@ -100,9 +100,64 @@ function displayWeather(weather) {
   console.log(weather);
   const container = document.querySelector(".container");
   container.innerHTML = "";
+  container.appendChild(createSearchBarElement());
   container.appendChild(createCurrentWeatherElement(weather));
   container.appendChild(createHourlyForecastElement(weather));
   container.appendChild(createDailyForecastElement(weather));
+}
+
+// SEARCH BAR ELEMENT
+
+function createSearchBarElement() {
+  container = document.createElement("div");
+  container.id = "search-bar";
+  // Search icon
+  container.innerHTML = `
+    <img src="./assets/search.svg">
+  `;
+  // Input field
+  const form = document.createElement("form");
+  form.innerHTML = `
+          <input
+            type="text"
+            name="search"
+            class="hidden"
+            id="search-input"
+            placeholder="Search for a city or airport"
+            required
+          />
+        `;
+  container.appendChild(form);
+  container.querySelector("img").addEventListener("click", toggleSearchHidden);
+  form.addEventListener("submit", (e) => {
+    searchSubmitted(e);
+    form.querySelector("#search-input").classList.add("hidden");
+  });
+
+  // Degrees C/F switch
+  container.appendChild(createDegUnitSwitch());
+
+  return container;
+}
+
+function createDegUnitSwitch() {
+  const container = document.createElement("div");
+  container.classList.add("switch-container");
+  container.innerHTML = `
+    <div>℃</div>
+    <label class="switch">
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
+    <div>℉</div>
+  `;
+  return container;
+}
+
+function toggleSearchHidden() {
+  console.log("CLICK");
+  const search = document.querySelector("#search-input");
+  search.classList.toggle("hidden");
 }
 
 // CURRENT WEATHER
@@ -253,11 +308,8 @@ function createDailyCard(dayStr, icon, low, high, minLow, maxHigh) {
 }
 
 function strToDate(dateStr) {
-  // Reorder the date so Date() plays nice!
-  dateParts = dateStr.split("-");
-  const yyyy = dateParts[0];
-  const mm = dateParts[1];
-  const dd = dateParts[2];
+  // Reorder the date so Date() returns the right date!
+  [yyyy, mm, dd] = dateStr.split("-");
   return new Date(`${mm}-${dd}-${yyyy}`);
 }
 
