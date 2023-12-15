@@ -144,18 +144,29 @@ function createDegUnitSwitch() {
   const container = document.createElement("div");
   container.classList.add("switch-container");
   container.innerHTML = `
-    <div>℃</div>
+    <div>℉</div>
     <label class="switch">
       <input type="checkbox">
       <span class="slider round"></span>
     </label>
-    <div>℉</div>
+    <div>℃</div>
   `;
+  container
+    .querySelector("input[type='checkbox']")
+    .addEventListener("change", (e) => degUnitSwitchUpdated(e));
   return container;
 }
 
+function degUnitSwitchUpdated(e) {
+  console.log(e.target.checked);
+  if (e.target.checked) {
+    convertPageTemps("c");
+  } else {
+    convertPageTemps("f");
+  }
+}
+
 function toggleSearchHidden() {
-  console.log("CLICK");
   const search = document.querySelector("#search-input");
   search.classList.toggle("hidden");
 }
@@ -170,7 +181,9 @@ function createCurrentWeatherElement(weather) {
     weather.location.region
   }</div>
     <div id="country">${weather.location.country}</div>
-    <div id="current-temp">${Math.round(weather.current.temp_f)}</div>
+    <div id="current-temp" class="temp">${Math.round(
+      weather.current.temp_f
+    )}°</div>
     <img src="${weather.current.condition.icon}">
     <div id="current-condition">${weather.current.condition.text}</div>
   `;
@@ -214,7 +227,7 @@ function createHourCard(hour, icon, temp_f) {
   card.innerHTML = `
     <div class="hour-time">${timeStr}</div>
     <img src="https:${icon}">
-    <div class="temp hour-temp">${Math.round(temp_f)}</div>
+    <div class="temp hour-temp">${Math.round(temp_f)}°</div>
   `;
   return card;
 }
@@ -295,13 +308,13 @@ function createDailyCard(dayStr, icon, low, high, minLow, maxHigh) {
     <div class="day-str">${dayStr}</div>
     <img src="https:${icon}">
     <div class="low-high-container">
-      <div>${Math.round(low)}</div>
+      <div class="temp">${Math.round(low)}°</div>
       <div class="temp-bar-container">
         <div class="temp-bar" style="padding-left:${leftOffsetPct}%; padding-right:${rightOffsetPct}%;">
           <div class="temp-bar-fill"></div>
         </div>
       </div>
-      <div>${Math.round(high)}</div>
+      <div class="temp">${Math.round(high)}°</div>
     </div>
   `;
   return card;
@@ -337,6 +350,31 @@ function isToday(date) {
     now.getMonth() == date.getMonth() &&
     now.getDate() == date.getDate()
   );
+}
+
+function convertPageTemps(unit) {
+  const allTemps = document.querySelectorAll(".temp");
+  for (i = 0; i < allTemps.length; i++) {
+    const tempEl = allTemps[i];
+    const temp = parseInt(tempEl.innerText);
+    let newTemp = temp;
+    if (unit.toLowerCase() === "f") {
+      newTemp = convertC2F(temp);
+    } else if (unit.toLowerCase() === "c") {
+      newTemp = convertF2C(temp);
+    } else {
+      console.log("Error: Improper degree unit supplied to converter");
+    }
+    tempEl.innerText = Math.round(newTemp) + "°";
+  }
+}
+
+function convertF2C(degreesF) {
+  return ((degreesF - 32) * 5) / 9;
+}
+
+function convertC2F(degreesC) {
+  return Math.round((degreesC * 9) / 5) + 32;
 }
 
 displaySearch();

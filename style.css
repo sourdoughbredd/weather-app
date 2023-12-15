@@ -187,6 +187,7 @@ input:checked + .slider:before {
 #current-temp {
   font-size: 4rem;
   margin-top: 10px;
+  transform: translate(0.7rem);
 }
 
 #current-container img {
