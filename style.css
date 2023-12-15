@@ -2,26 +2,42 @@
   font-size: 24px;
   font-family: "Roboto", sans-serif;
   font-weight: 200;
+  --bg-gradient: linear-gradient(rgb(62, 131, 251), rgb(151, 204, 236));
+}
+
+html {
+  width: 100%;
+  height: 100%;
 }
 
 body {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 40px;
   display: grid;
   place-items: center;
-  padding: 40px;
+  background-image: linear-gradient(
+    135deg,
+    rgb(255, 246, 225),
+    rgb(198, 250, 236)
+  );
+  background-repeat: no-repeat;
 }
 
 .container {
-  /* border: 2px solid black; */
   box-sizing: border-box;
   width: 600px;
-  /* height: 800px; */
   display: flex;
   flex-direction: column;
   gap: 24px;
   align-items: center;
-  padding: 50px;
-  border-radius: 48px;
+  padding: 40px 50px;
+  border-radius: 50px;
   box-shadow: 4px 4px 8px rgb(162, 162, 162);
+  background-image: var(--bg-gradient);
+  color: rgb(243, 243, 243);
 }
 
 form {
@@ -30,8 +46,12 @@ form {
   justify-content: center;
 }
 
+/* INITIAL SEARCH DISPLAY */
+
 #search-input {
   border: none;
+  background-color: rgba(255, 255, 255, 0);
+  color: inherit;
   border-bottom: 3px solid rgba(0, 0, 0, 0.516);
   width: 80%;
   height: 1.5rem;
@@ -40,10 +60,113 @@ form {
   padding: 0.1rem 0.5rem;
 }
 
+#search-input::placeholder {
+  color: rgb(225, 225, 225);
+}
+
 #search-input:focus {
   outline: none;
   border-color: black;
 }
+
+/* WEATHER DISPLAY */
+
+#search-bar {
+  /* border: 2px solid black; */
+  height: 1.8rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#search-bar img {
+  cursor: pointer;
+  width: 40px;
+  filter: invert(0.9);
+}
+
+#search-bar img:hover {
+  transform: scale(1.2);
+}
+
+#search-bar form {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+#search-bar #search-input {
+  width: 100%;
+  transition: width 0.5s ease;
+}
+
+#search-bar #search-input.hidden {
+  visibility: hidden;
+  width: 0;
+}
+
+/* The switch - the box around the slider */
+.switch-container {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dddcda;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 2px;
+  background-color: rgb(95, 148, 179);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 10px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* WEATHER */
 
 #current-container {
   display: flex;
@@ -53,6 +176,8 @@ form {
 
 #location {
   font-size: 1.7rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 #country {
@@ -61,11 +186,21 @@ form {
 
 #current-temp {
   font-size: 4rem;
-  margin-top: 24px;
+  margin-top: 10px;
 }
 
 #current-container img {
   width: 100px;
+}
+
+#current-condition {
+  font-size: 1.2rem;
+}
+
+.weather-container {
+  border-radius: 18px;
+  box-shadow: 4px 4px 8px gray;
+  background-image: var(--bg-gradient);
 }
 
 #hourly-container {
@@ -74,8 +209,6 @@ form {
   display: flex;
   gap: 30px;
   padding: 24px 36px;
-  border-radius: 18px;
-  box-shadow: 4px 4px 8px gray;
   overflow-x: scroll;
 }
 
@@ -88,11 +221,9 @@ form {
 #daily-container {
   display: flex;
   flex-direction: column;
-  border-radius: 18px;
   box-sizing: border-box;
   width: 100%;
   padding: 18px 36px;
-  box-shadow: 4px 4px 8px gray;
 }
 
 .daily-card {
@@ -131,5 +262,6 @@ form {
 .temp-bar-fill {
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   background-color: rgb(204, 128, 128);
 }
