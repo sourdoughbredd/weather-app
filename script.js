@@ -24,7 +24,7 @@ const fetchForecastWeather = async function (searchStr) {
 };
 
 function handleApiError(e) {
-  alert("ERROR");
+  alert("API ERROR");
   console.log(e);
 }
 
@@ -109,7 +109,6 @@ function displayWeather(weather) {
 
 function createCurrentWeatherElement(weather) {
   const container = document.createElement("div");
-  container.classList.add("weather-container");
   container.id = "current-container";
   container.innerHTML = `
     <div id="location">${weather.location.name}, ${
@@ -211,12 +210,12 @@ function createDailyForecastElement(weather) {
   );
   // Create the element and add daily cards
   container = document.createElement("div");
+  container.classList.add("weather-container");
   container.id = "daily-container";
   days.forEach((day) => {
-    const date = new Date(day.date);
     container.appendChild(
       createDailyCard(
-        dayStr(date),
+        dayStr(strToDate(day.date)),
         day.condition.icon,
         day.mintemp_f,
         day.maxtemp_f,
@@ -251,6 +250,15 @@ function createDailyCard(dayStr, icon, low, high, minLow, maxHigh) {
     </div>
   `;
   return card;
+}
+
+function strToDate(dateStr) {
+  // Reorder the date so Date() plays nice!
+  dateParts = dateStr.split("-");
+  const yyyy = dateParts[0];
+  const mm = dateParts[1];
+  const dd = dateParts[2];
+  return new Date(`${mm}-${dd}-${yyyy}`);
 }
 
 function dayStr(date) {
