@@ -32,6 +32,7 @@ body {
 .container {
   box-sizing: border-box;
   width: 600px;
+  max-height: 5rem;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -41,6 +42,13 @@ body {
   box-shadow: 4px 4px 8px rgb(162, 162, 162);
   background-image: var(--bg-gradient);
   color: rgb(243, 243, 243);
+  transition: max-height 0.4s linear;
+  overflow: hidden;
+}
+
+/* For height transition */
+.container.expanded {
+  max-height: 75rem;
 }
 
 form {
