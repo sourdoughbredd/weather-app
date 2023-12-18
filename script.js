@@ -3,10 +3,17 @@ const API_KEY = "63ed6dc9eafb4c5786e153351231112";
 const apiRequest = async function (url) {
   try {
     const response = await fetch(url);
+    // Check for HTTP error and build error object
+    if (!response.ok) {
+      const error = new Error("HTTP error");
+      error.status = response.status;
+      error.response = await response.json();
+      throw error;
+    }
     const data = await response.json();
     return data;
-  } catch (e) {
-    handleApiError(e);
+  } catch (error) {
+    handleApiError(error);
     return null;
   }
 };
@@ -23,14 +30,21 @@ const fetchForecastWeather = async function (searchStr) {
   return { location: data.location, forecast: data.forecast };
 };
 
-function handleApiError(e) {
-  alert("API ERROR");
-  console.log(e);
+function handleApiError(error) {
+  const code = error.response.error.code;
+  if (code == 1006) {
+    alert("No matching location found. Please try again.");
+  }
 }
 
 const getWeather = async function (searchStr) {
   const currentResp = await fetchCurrentWeather(searchStr);
   const forecastResp = await fetchForecastWeather(searchStr);
+
+  if (!currentResp || !forecastResp) {
+    return null;
+  }
+
   // Extract location
   const location = {
     name: currentResp.location.name,
@@ -76,17 +90,8 @@ const getWeather = async function (searchStr) {
 function displaySearch() {
   const container = document.querySelector(".container");
   container.innerHTML = "";
-  const form = document.createElement("form");
-  form.innerHTML = `
-          <input
-            type="text"
-            name="search"
-            id="search-input"
-            placeholder="Search for a city or airport"
-            required
-          />
-        `;
-  form.addEventListener("submit", (e) => searchSubmitted(e));
+  container.appendChild(createSearchBarElement());
+  container.querySelector("input[type='text']").classList.remove("hidden");
   container.appendChild(form);
 }
 
@@ -94,40 +99,29 @@ const searchSubmitted = async function (event) {
   event.preventDefault();
   const searchStr = event.target.querySelector("input[type='text']").value;
   const weather = await getWeather(searchStr);
-  const searchBar = document.getElementById("search-bar");
-  if (searchBar) {
-    // Weather page already up
-    updateWeather(weather);
-    const unitSwitch = searchBar.querySelector("input[type='checkbox']");
-    // Check if we need to display celcius
-    if (inCelcius(unitSwitch)) {
-      convertPageTemps("c");
-    }
-  } else {
+  if (weather) {
     displayWeather(weather);
   }
 };
 
 function displayWeather(weather) {
-  console.log(weather);
   const container = document.querySelector(".container");
-  container.innerHTML = "";
-  container.appendChild(createSearchBarElement());
-  container.appendChild(createCurrentWeatherElement(weather));
-  container.appendChild(createHourlyForecastElement(weather));
-  container.appendChild(createDailyForecastElement(weather));
-}
-
-function updateWeather(weather) {
-  const container = document.querySelector(".container");
-  // Remove all the weather elements
+  container.classList.add("expanded"); // for height transition
+  // Remove all children except first
   while (container.childNodes.length > 1) {
     container.removeChild(container.lastChild);
   }
-  // Re-add them
+  // Display the weather
   container.appendChild(createCurrentWeatherElement(weather));
   container.appendChild(createHourlyForecastElement(weather));
   container.appendChild(createDailyForecastElement(weather));
+  // Convert to celcius if necessary
+  const unitSwitch = document
+    .getElementById("search-bar")
+    .querySelector("input[type='checkbox']");
+  if (inCelcius(unitSwitch)) {
+    convertPageTemps("c");
+  }
 }
 
 // SEARCH BAR ELEMENT
