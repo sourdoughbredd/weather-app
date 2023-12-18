@@ -93,7 +93,18 @@ const searchSubmitted = async function (event) {
   event.preventDefault();
   const searchStr = event.target.querySelector("input[type='text']").value;
   const weather = await getWeather(searchStr);
-  displayWeather(weather);
+  const searchBar = document.getElementById("search-bar");
+  if (searchBar) {
+    // Weather page already up
+    updateWeather(weather);
+    const unitSwitch = searchBar.querySelector("input[type='checkbox']");
+    // Check if we need to display celcius
+    if (inCelcius(unitSwitch)) {
+      convertPageTemps("c");
+    }
+  } else {
+    displayWeather(weather);
+  }
 };
 
 function displayWeather(weather) {
@@ -101,6 +112,18 @@ function displayWeather(weather) {
   const container = document.querySelector(".container");
   container.innerHTML = "";
   container.appendChild(createSearchBarElement());
+  container.appendChild(createCurrentWeatherElement(weather));
+  container.appendChild(createHourlyForecastElement(weather));
+  container.appendChild(createDailyForecastElement(weather));
+}
+
+function updateWeather(weather) {
+  const container = document.querySelector(".container");
+  // Remove all the weather elements
+  while (container.childNodes.length > 1) {
+    container.removeChild(container.lastChild);
+  }
+  // Re-add them
   container.appendChild(createCurrentWeatherElement(weather));
   container.appendChild(createHourlyForecastElement(weather));
   container.appendChild(createDailyForecastElement(weather));
@@ -158,12 +181,19 @@ function createDegUnitSwitch() {
 }
 
 function degUnitSwitchUpdated(e) {
-  console.log(e.target.checked);
-  if (e.target.checked) {
+  if (inCelcius(e.target)) {
     convertPageTemps("c");
   } else {
     convertPageTemps("f");
   }
+}
+
+function inFarenheit(unitSwitch) {
+  return !unitSwitch.checked;
+}
+
+function inCelcius(unitSwitch) {
+  return unitSwitch.checked;
 }
 
 function toggleSearchHidden() {
