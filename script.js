@@ -36,6 +36,7 @@ const getWeather = async function (searchStr) {
     name: currentResp.location.name,
     region: currentResp.location.region,
     country: currentResp.location.country,
+    local_time: currentResp.location.localtime,
   };
   // Extract current weather
   const current = {
@@ -279,7 +280,7 @@ function hourToTimeStr(hour) {
 }
 
 function getNext23Hours(weather) {
-  const datenow = new Date();
+  const datenow = new Date(weather.location.local_time);
   const currentHour = datenow.getHours();
   const todayHourly = weather.forecast[0].hour;
   const tomorrowHourly = weather.forecast[1].hour;
