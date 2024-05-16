@@ -21,7 +21,7 @@ The (Apple Clone) Weather App fetches current and forecast weather data from a w
 
 ## Screenshot
 
-<img src="./screenshots/main.png" alt="Screenshot of the Weather App" style="max-height: 400px;">
+<img src="./screenshots/main.png" alt="Screenshot of the Weather App" style="height: 400px;">
 
 ## Preview
 
